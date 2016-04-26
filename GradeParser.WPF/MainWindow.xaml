@@ -1,0 +1,64 @@
+﻿<Window x:Class="GradeParser.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GradeParser.WPF"
+        mc:Ignorable="d"
+        Title="Average grade" Height="223" Width="550">
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="Open">
+                        <MenuItem Header="Student" Click="OpenButton_Click"/>
+                        <MenuItem Header="Credits" Click="OpenButton_Click"/>
+                        <MenuItem Header="Spesiality" Click="OpenButton_Click"/>
+                    </MenuItem>
+
+                    <Separator />
+                    <MenuItem Header="_Exit" />
+                </MenuItem>
+                <MenuItem Header="_Process">
+                    <MenuItem Header="_Calculate" Click="CalculateButton_Click"/>
+                    <MenuItem Header="Save" Click="SaveCalcButton_Click"/>
+                    <MenuItem Header="Consider">
+                        <MenuItem Header="Exam" IsCheckable="True" IsChecked="True"/>
+                        <MenuItem Header="DiffOffset" IsCheckable="True" IsChecked="True"/>
+                        <MenuItem Header="Offset" IsCheckable="True" IsChecked="True"/>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Help">
+                    <MenuItem Header="How to use"/>
+                    <MenuItem Header="About"/>
+                </MenuItem>
+            </Menu>
+            <TextBox AcceptsReturn="True" />
+        </DockPanel>
+        <Grid Margin="0,20,0,0">
+
+            <GroupBox x:Name="ReportLoadGroupBox" Header="ReportLoad" Margin="440,10,12,0" Height="79" VerticalAlignment="Top">
+                <Grid Margin="0,0,0,0">
+                    <CheckBox x:Name="StudentCheckBox" Content="Student" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
+                    <CheckBox x:Name="CreditsCheckBox" Content="Credits" Margin="0,20,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
+                    <CheckBox x:Name="SpecialityCheckBox" Content="Speciality" Margin="0,40,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
+                </Grid>
+            </GroupBox>
+
+            <Button x:Name="CalculateButton" Content="Calculate" Margin="440,96,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Click="CalculateButton_Click"/>
+            <Grid HorizontalAlignment="Left" Margin="10,10,0,10" Width="414">
+                <Label x:Name="CurrentStudentlabel" Content="CurrentStudent" Margin="161,0,162,103"/>
+                <Label x:Name="StudentNamelabel" Content="Name" Height="26" VerticalAlignment="Top" Margin="10,26,356,0"/>
+                <Label x:Name="Grouplabel" Content="Group" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="AvgClassiclabel" Content="Average Classic" Height="26" VerticalAlignment="Top" Margin="10,83,312,0"/>
+                <Label x:Name="AvgBolognalabel" Content="Bologna" Height="28" VerticalAlignment="Top" Margin="238,83,123,0"/>
+                <TextBlock x:Name="StudentNameTextBlock" Text="Name" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="63,31,10,0" TextAlignment="Center" FontSize="15"/>
+                <TextBlock x:Name="GroupTextBlock" Text="Group" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="63,58,20,0"/>
+                <TextBlock x:Name="AvgClassicTextBlock" Text="AvgClass" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="125,89,233,0" TextAlignment="Center" FontSize="12"/>
+                <TextBlock x:Name="AvgBolognaTextBlock" Text="AvgBologna" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Margin="309,84,29,0" TextAlignment="Center" FontSize="16" Foreground="LawnGreen"/>
+            </Grid>
+            <Button x:Name="SaveCalcButton" Content="Save" Margin="440,130,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Click="SaveCalcButton_Click"/>
+        </Grid>
+
+    </Grid>
+</Window>
