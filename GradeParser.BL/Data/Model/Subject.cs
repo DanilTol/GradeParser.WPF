@@ -1,9 +1,10 @@
 ﻿namespace GradeParser.BL.Data.Model
 {
-    public class Subject
+    public class Subject : BaseEntity
     {
-        public string Name { get; set; }
         public SubjectType Type { get; set; }
         public Grade Grade { get; set; }
+        public string Years { get; set; }
+        public string Term { get; set; }
     }
 }
