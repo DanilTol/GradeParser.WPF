@@ -23,8 +23,10 @@ namespace GradeParser.WPF
 
         #region Common variables
         private CalculateService _calculateService;
+        private string[] studentPath;
+        private string creditPath;
         #endregion
-        
+
 
         public MainWindow()
         {
@@ -46,33 +48,23 @@ namespace GradeParser.WPF
             //Finding who send event for marking right condition(input file)
             var mi = sender as MenuItem;
 
-            string[] paths = { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
+            //TODO: open file dialog
 
-            var std = this._calculateService.ParseInputExcels(paths, string.Empty);
-
-            switch (mi.Header.ToString())
+            if (mi.Header as string == "Student")
             {
-                case "Student":
-                    ReportLoad.Student = true;
-                    break;
-                case "Credits":
-                    ReportLoad.Credits = true;
-                    break;
-                default:
-                    ReportLoad.Speciality = true;
-                    break;
+                studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
+                ReportLoad.Student = true;
             }
-        }
-
-        
-        private void SaveCalcButton_Click(object sender, RoutedEventArgs e)
-        {
-
+            else
+            {
+                creditPath = @"C:\Users\Danil\Desktop\Credits.xlsx";
+                ReportLoad.Credits = true;
+            }
         }
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var std = this._calculateService.ParseInputExcels(studentPath, string.Empty, new CalculationSettings { AllowDiffOffset = true, AllowExam = true, AllowOffset = false });
         }
     }
 }

@@ -95,36 +95,13 @@ namespace GradeParser.BL.ExcelFunc
                     var subjectCredit = new SubjectCredit
                     {
                         Name = row.Cells[1, 1].Value2.ToString(),
-
-                    }
-
-                    var subject = new Subject
-                    {
-                        Name = row.Cells[1, 2].Value2.ToString(),
-                        Grade = new Grade
-                        {
-                            ClassicGrade = row.Cells[1, 4].Value2.ToString(),
-                            BolognaGrade = row.Cells[1, 5].Value2.ToString(),
-                            ESTCGrade = row.Cells[1, 6].Value2.ToString()
-                        },
-                        Years = row.Cells[1, 7].Value2.ToString(),
-                        Term = row.Cells[1, 8].Value2.ToString()
+                        Years = row.Cells[1, 2].Value2.ToString(),
+                        Term = row.Cells[1, 3].Value2.ToString(),
+                        Type = row.Cells[1, 4].Value2.ToString(),
+                        Credit = row.Cells[1, 5].Value2 == null ? default(int) : int.Parse(row.Cells[1, 1].Value2 as string)
                     };
 
-                    switch (row.Cells[1, 3].Value2 as string)
-                    {
-                        case SubjectTypeNameExam:
-                            subject.Type = SubjectType.Exam;
-                            break;
-                        case SubjectTypeNameOffset:
-                            subject.Type = SubjectType.Offset;
-                            break;
-                        default:
-                            subject.Type = SubjectType.DiffOffset;
-                            break;
-                    }
-
-                    student.Subjects.Add(subject);
+                    subjectList.Add(subjectCredit);
                 }
                 else
                 {
@@ -138,6 +115,7 @@ namespace GradeParser.BL.ExcelFunc
             releaseObject(xlWorkBook);
             releaseObject(_excelApp);
 
+            return subjectList;
         } 
 
         private void releaseObject(object obj)

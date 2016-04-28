@@ -43,6 +43,7 @@
     <Compile Include="Data\Interface\IService.cs" />
     <Compile Include="Data\Model\BaseEntity.cs" />
     <Compile Include="Data\Model\BaseSubject.cs" />
+    <Compile Include="Data\Model\CalculationSettings.cs" />
     <Compile Include="Data\Model\Grade.cs" />
     <Compile Include="Data\Model\Student.cs" />
     <Compile Include="Data\Model\Subject.cs" />

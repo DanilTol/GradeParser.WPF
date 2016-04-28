@@ -13,16 +13,13 @@
                     <MenuItem Header="Open">
                         <MenuItem Header="Student" Click="OpenButton_Click"/>
                         <MenuItem Header="Credits" Click="OpenButton_Click"/>
-                        <MenuItem Header="Spesiality" Click="OpenButton_Click"/>
                     </MenuItem>
-
                     <Separator />
                     <MenuItem Header="_Exit" />
                 </MenuItem>
                 <MenuItem Header="_Process">
                     <MenuItem Header="_Calculate" Click="CalculateButton_Click"/>
-                    <MenuItem Header="Save" Click="SaveCalcButton_Click"/>
-                    <MenuItem Header="Consider">
+                    <MenuItem Header="Allow">
                         <MenuItem Header="Exam" IsCheckable="True" IsChecked="True"/>
                         <MenuItem Header="DiffOffset" IsCheckable="True" IsChecked="True"/>
                         <MenuItem Header="Offset" IsCheckable="True" IsChecked="True"/>
@@ -37,11 +34,10 @@
         </DockPanel>
         <Grid Margin="0,20,0,0">
 
-            <GroupBox x:Name="ReportLoadGroupBox" Header="ReportLoad" Margin="440,10,12,0" Height="79" VerticalAlignment="Top">
+            <GroupBox x:Name="ReportLoadGroupBox" Header="ReportLoad" Margin="440,10,12,0" Height="61" VerticalAlignment="Top">
                 <Grid Margin="0,0,0,0">
-                    <CheckBox x:Name="StudentCheckBox" Content="Student" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
-                    <CheckBox x:Name="CreditsCheckBox" Content="Credits" Margin="0,20,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
-                    <CheckBox x:Name="SpecialityCheckBox" Content="Speciality" Margin="0,40,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
+                    <CheckBox x:Name="StudentCheckBox" Content="Student" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Margin="0,2,-45,0"/>
+                    <CheckBox x:Name="CreditsCheckBox" Content="Credits" Margin="0,22,-45,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
                 </Grid>
             </GroupBox>
 
@@ -57,7 +53,6 @@
                 <TextBlock x:Name="AvgClassicTextBlock" Text="AvgClass" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="125,89,233,0" TextAlignment="Center" FontSize="12"/>
                 <TextBlock x:Name="AvgBolognaTextBlock" Text="AvgBologna" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Margin="309,84,29,0" TextAlignment="Center" FontSize="16" Foreground="LawnGreen"/>
             </Grid>
-            <Button x:Name="SaveCalcButton" Content="Save" Margin="440,130,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Click="SaveCalcButton_Click"/>
         </Grid>
 
     </Grid>
