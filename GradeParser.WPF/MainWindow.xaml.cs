@@ -22,13 +22,9 @@ namespace GradeParser.WPF
         #endregion
 
         #region Common variables
-        private IService _calculateService;
-        private IEnumerable<Student> StudentsSource;
-        private IEnumerable<SubjectCredit> SubjectCredits;
-        private string[] SpecialitySubjects;
+        private CalculateService _calculateService;
         #endregion
-
-      
+        
 
         public MainWindow()
         {
@@ -50,11 +46,9 @@ namespace GradeParser.WPF
             //Finding who send event for marking right condition(input file)
             var mi = sender as MenuItem;
 
-            var path1 = @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls";
-            
-            //var std = ParseStudentExcelFile(path1);
+            string[] paths = { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
 
-            string[] paths = { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
+            var std = this._calculateService.ParseInputExcels(paths, string.Empty);
 
             switch (mi.Header.ToString())
             {

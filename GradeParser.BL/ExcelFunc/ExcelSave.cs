@@ -1,7 +1,8 @@
 ﻿namespace GradeParser.BL.ExcelFunc
 {
-    public class ExcelSave
+    internal class ExcelSave
     {
-         
+        
+
     }
 }

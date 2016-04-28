@@ -1,6 +1,6 @@
 ﻿namespace GradeParser.BL.Data.Model
 {
-    public class SubjectCredit : BaseEntity
+    public class SubjectCredit : BaseSubject
     {
         public int Credit { get; set; }
     }
