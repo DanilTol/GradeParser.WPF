@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using GradeParser.BL.Data.Interface;
 using GradeParser.BL.Data.Model;
 using GradeParser.BL.Service;
 using GradeParser.WPF.ViewModel;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace GradeParser.WPF
 {
@@ -64,7 +59,9 @@ namespace GradeParser.WPF
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-            var std = this._calculateService.ParseInputExcels(studentPath, string.Empty, new CalculationSettings { AllowDiffOffset = true, AllowExam = true, AllowOffset = false });
+            studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
+            creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
+            var std = this._calculateService.ParseInputExcels(studentPath, creditPath, new CalculationSettings { AllowDiffOffset = true, AllowExam = true, AllowOffset = false });
         }
     }
 }

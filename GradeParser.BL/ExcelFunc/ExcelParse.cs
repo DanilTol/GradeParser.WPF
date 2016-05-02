@@ -47,18 +47,7 @@ namespace GradeParser.BL.ExcelFunc
                         Term = row.Cells[1, 8].Value2.ToString()
                     };
 
-                    switch (row.Cells[1, 3].Value2 as string)
-                    {
-                        case SubjectTypeNameExam:
-                            subject.Type = SubjectType.Exam;
-                            break;
-                        case SubjectTypeNameOffset:
-                            subject.Type = SubjectType.Offset;
-                            break;
-                        default:
-                            subject.Type = SubjectType.DiffOffset;
-                            break;
-                    }
+                    subject.Type = RecognizeSubjectType(row.Cells[1, 3].Value2 as string);
 
                     student.Subjects.Add(subject);
                 }
@@ -78,7 +67,7 @@ namespace GradeParser.BL.ExcelFunc
             return student;
         }
 
-        public List<SubjectCredit> ParseCredirExcelFile(string path)
+        public List<SubjectCredit> ParseCreditsExcelFile(string path)
         {
             var _excelApp = new Excel.Application();
             var xlWorkBook = _excelApp.Workbooks.Open(path, 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
@@ -92,13 +81,22 @@ namespace GradeParser.BL.ExcelFunc
             {
                 if (row.Cells[1, 2].Value2 != null)
                 {
+
+                    var Name = row.Cells[1, 1].Value2.ToString();
+                    var Years = row.Cells[1, 2].Value2.ToString();
+                    var Term = row.Cells[1, 3].Value2.ToString();
+                    var Type = RecognizeSubjectType(row.Cells[1, 4].Value2 as string);
+                    var cc = row.Cells[1, 5].Value2.ToString();
+
+
+
                     var subjectCredit = new SubjectCredit
                     {
                         Name = row.Cells[1, 1].Value2.ToString(),
                         Years = row.Cells[1, 2].Value2.ToString(),
                         Term = row.Cells[1, 3].Value2.ToString(),
-                        Type = row.Cells[1, 4].Value2.ToString(),
-                        Credit = row.Cells[1, 5].Value2 == null ? default(int) : int.Parse(row.Cells[1, 1].Value2 as string)
+                        Type = RecognizeSubjectType(row.Cells[1, 4].Value2 as string),
+                        Credit = Double.Parse(cc)
                     };
 
                     subjectList.Add(subjectCredit);
@@ -116,7 +114,29 @@ namespace GradeParser.BL.ExcelFunc
             releaseObject(_excelApp);
 
             return subjectList;
-        } 
+        }
+
+        public bool SaveStudentExcel(Student student)
+        {
+
+            return true;
+        }
+
+
+#region Help methods
+
+        private SubjectType RecognizeSubjectType(string typeName)
+        {
+            switch (typeName)
+            {
+                case SubjectTypeNameExam:
+                    return SubjectType.Exam;
+                case SubjectTypeNameOffset:
+                    return SubjectType.Offset;
+                default:
+                    return SubjectType.DiffOffset;
+            }
+        }
 
         private void releaseObject(object obj)
         {
@@ -135,5 +155,7 @@ namespace GradeParser.BL.ExcelFunc
                 GC.Collect();
             }
         }
+
+#endregion
     }
 }

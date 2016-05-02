@@ -2,6 +2,6 @@
 {
     public class SubjectCredit : BaseSubject
     {
-        public int Credit { get; set; }
+        public double Credit { get; set; }
     }
 }

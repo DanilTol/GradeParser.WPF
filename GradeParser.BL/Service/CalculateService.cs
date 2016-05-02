@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using GradeParser.BL.BL;
 using GradeParser.BL.Data.Interface;
 using GradeParser.BL.Data.Model;
 using GradeParser.BL.ExcelFunc;
@@ -9,18 +11,18 @@ namespace GradeParser.BL.Service
     public class CalculateService : IService
     {
         private readonly ExcelParse _excelParse;
-        private ExcelSave _excelSave;
+        private CalculateGrade _calculateGrade;
 
         public CalculateService()
         {
-            this._excelSave = new ExcelSave();
+            this._calculateGrade = new CalculateGrade();
             this._excelParse = new ExcelParse();
         }
 
         public List<Student> ParseInputExcels(string[] studentPaths, string creditsPath, CalculationSettings calculationSettings)
         {
             var studentSource = studentPaths.AsParallel().Select(path => this._excelParse.ParseStudentExcel(path)).ToList();
-            var subjectCredits = this._excelParse.ParseCredirExcelFile(creditsPath);
+            var subjectCredits = this._excelParse.ParseCreditsExcelFile(creditsPath);
             //studentSource.Select(st => st.Subjects.Where(sub => sub.Type == SubjectType.Offset)).First()
             //var withoutRussian = studentSource.Select(st => st.Subjects.Where(sub => !sub.Name.Contains("Russian")));
 
@@ -41,6 +43,12 @@ namespace GradeParser.BL.Service
             #region Filter by allowed subjects for calculation(diff/offset/exam)
             if (!calculationSettings.AllowExam)
             {
+                //studentSource.ForEach(student =>
+                //{
+                //    student.Subjects = _calculateGrade.RemoveUnneedSubject(student.Subjects, SubjectType.Exam).ToList();
+                //});
+                //subjectCredits = _calculateGrade.RemoveUnneedSubject(subjectCredits, SubjectType.Exam).ToList();
+
                 // Skip exams
                 studentSource = studentSource.Select(st =>
                 {
@@ -96,7 +104,36 @@ namespace GradeParser.BL.Service
 
 
 
+
+
+
+
+
+            var AllCredits =
+                subjectCredits.DistinctBy(sub => sub.Name)
+                    .Select(sub => new SubjectCreditsOnly {Credit = sub.Credit, Name = sub.Name});
+
+
+
             return studentSource;
         }
+
+
+    }
+
+    public static class Helper
+    {
+
+        #region helpers
+
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
+            (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            HashSet<TKey> seenKeys = new HashSet<TKey>();
+
+            return source.Where(element => seenKeys.Add(keySelector(element)));
+        }
+
+        #endregion
     }
 }

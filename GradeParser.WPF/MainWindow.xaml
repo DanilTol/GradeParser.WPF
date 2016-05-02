@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GradeParser.WPF"
         mc:Ignorable="d"
-        Title="Average grade" Height="223" Width="550">
+        Title="Average grade" Height="233" Width="548">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -30,7 +30,7 @@
                     <MenuItem Header="About"/>
                 </MenuItem>
             </Menu>
-            <TextBox AcceptsReturn="True" />
+            <TextBox AcceptsReturn="True" Height="209" VerticalAlignment="Top" />
         </DockPanel>
         <Grid Margin="0,20,0,0">
 
@@ -42,7 +42,7 @@
             </GroupBox>
 
             <Button x:Name="CalculateButton" Content="Calculate" Margin="440,96,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Click="CalculateButton_Click"/>
-            <Grid HorizontalAlignment="Left" Margin="10,10,0,10" Width="414">
+            <Grid HorizontalAlignment="Left" Margin="10,10,0,0" Width="414" Height="127" VerticalAlignment="Top">
                 <Label x:Name="CurrentStudentlabel" Content="CurrentStudent" Margin="161,0,162,103"/>
                 <Label x:Name="StudentNamelabel" Content="Name" Height="26" VerticalAlignment="Top" Margin="10,26,356,0"/>
                 <Label x:Name="Grouplabel" Content="Group" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top"/>
@@ -53,6 +53,8 @@
                 <TextBlock x:Name="AvgClassicTextBlock" Text="AvgClass" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="125,89,233,0" TextAlignment="Center" FontSize="12"/>
                 <TextBlock x:Name="AvgBolognaTextBlock" Text="AvgBologna" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Margin="309,84,29,0" TextAlignment="Center" FontSize="16" Foreground="LawnGreen"/>
             </Grid>
+            <ProgressBar Name="pbStatus" Height="23" VerticalAlignment="Bottom" Margin="10,0,0,10" Value="60" RenderTransformOrigin="0.48,0.367" HorizontalAlignment="Left" Width="516"/>
+            <TextBlock Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0}%}" VerticalAlignment="Bottom" Margin="257,0,0,14" HorizontalAlignment="Left" Width="21" />
         </Grid>
 
     </Grid>
