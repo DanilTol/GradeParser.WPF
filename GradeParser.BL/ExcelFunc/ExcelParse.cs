@@ -12,13 +12,15 @@ namespace GradeParser.BL.ExcelFunc
         private const string SubjectTypeNameExam = "екзамен";
         private const string SubjectTypeNameOffset = "залік";
         private const string SubjectTypeNameDiffOffset = "диф. залік";
+        private const string StudentIsFree = "зв.";
+        private const string StudentIsMiss = "нея.";
 
         #endregion
 
         public Student ParseStudentExcel(string path)
         {
-            var _excelApp = new Excel.Application();
-            var xlWorkBook = _excelApp.Workbooks.Open(path, 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            var excelApp = new Excel.Application();
+            var xlWorkBook = excelApp.Workbooks.Open(path, 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
             var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.Item[1];
 
             var usedRange = xlWorkSheet.UsedRange;
@@ -34,20 +36,27 @@ namespace GradeParser.BL.ExcelFunc
             {
                 if (row.Cells[1, 2].Value2 != null)
                 {
+                    var classicGradeExcel = row.Cells[1, 4].Value2.ToString();
+                    var bologneGradeExcel = row.Cells[1, 5].Value2.ToString();
+
+                    if (classicGradeExcel == StudentIsFree || classicGradeExcel == StudentIsMiss)
+                    {
+                        continue;
+                    }
+
                     var subject = new Subject
                     {
                         Name = row.Cells[1, 2].Value2.ToString(),
                         Grade = new Grade
                         {
-                            ClassicGrade = row.Cells[1, 4].Value2.ToString(),
-                            BolognaGrade = row.Cells[1, 5].Value2.ToString(),
+                            ClassicGrade = Int32.Parse(classicGradeExcel),
+                            BolognaGrade = Int32.Parse(bologneGradeExcel),
                             ESTCGrade = row.Cells[1, 6].Value2.ToString()
                         },
                         Years = row.Cells[1, 7].Value2.ToString(),
-                        Term = row.Cells[1, 8].Value2.ToString()
+                        Term = row.Cells[1, 8].Value2.ToString(),
+                        Type = RecognizeSubjectType(row.Cells[1, 3].Value2 as string)
                     };
-
-                    subject.Type = RecognizeSubjectType(row.Cells[1, 3].Value2 as string);
 
                     student.Subjects.Add(subject);
                 }
@@ -56,21 +65,20 @@ namespace GradeParser.BL.ExcelFunc
                     break;
                 }
             }
-            xlWorkBook.Close(true, null, null);
-            _excelApp.Quit();
 
+            xlWorkBook.Close(true, null, null);
+            excelApp.Quit();
             releaseObject(xlWorkSheet);
             releaseObject(xlWorkBook);
-            releaseObject(_excelApp);
-
+            releaseObject(excelApp);
 
             return student;
         }
 
         public List<SubjectCredit> ParseCreditsExcelFile(string path)
         {
-            var _excelApp = new Excel.Application();
-            var xlWorkBook = _excelApp.Workbooks.Open(path, 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            var excelApp = new Excel.Application();
+            var xlWorkBook = excelApp.Workbooks.Open(path, 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
             var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.Item[1];
 
             var usedRange = xlWorkSheet.UsedRange;
@@ -81,22 +89,14 @@ namespace GradeParser.BL.ExcelFunc
             {
                 if (row.Cells[1, 2].Value2 != null)
                 {
-
-                    var Name = row.Cells[1, 1].Value2.ToString();
-                    var Years = row.Cells[1, 2].Value2.ToString();
-                    var Term = row.Cells[1, 3].Value2.ToString();
-                    var Type = RecognizeSubjectType(row.Cells[1, 4].Value2 as string);
-                    var cc = row.Cells[1, 5].Value2.ToString();
-
-
-
+                    var creditsExcel = row.Cells[1, 5].Value2.ToString();
                     var subjectCredit = new SubjectCredit
                     {
                         Name = row.Cells[1, 1].Value2.ToString(),
                         Years = row.Cells[1, 2].Value2.ToString(),
                         Term = row.Cells[1, 3].Value2.ToString(),
                         Type = RecognizeSubjectType(row.Cells[1, 4].Value2 as string),
-                        Credit = Double.Parse(cc)
+                        Credit = Double.Parse(creditsExcel)
                     };
 
                     subjectList.Add(subjectCredit);
@@ -106,12 +106,12 @@ namespace GradeParser.BL.ExcelFunc
                     break;
                 }
             }
-            xlWorkBook.Close(true, null, null);
-            _excelApp.Quit();
 
+            xlWorkBook.Close(true, null, null);
+            excelApp.Quit();
             releaseObject(xlWorkSheet);
             releaseObject(xlWorkBook);
-            releaseObject(_excelApp);
+            releaseObject(excelApp);
 
             return subjectList;
         }
@@ -123,7 +123,7 @@ namespace GradeParser.BL.ExcelFunc
         }
 
 
-#region Help methods
+        #region Help methods
 
         private SubjectType RecognizeSubjectType(string typeName)
         {
@@ -145,10 +145,9 @@ namespace GradeParser.BL.ExcelFunc
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 obj = null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 obj = null;
-                //MessageBox.Show("Unable to release the Object " + ex.ToString());
             }
             finally
             {
@@ -156,6 +155,6 @@ namespace GradeParser.BL.ExcelFunc
             }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -2,8 +2,8 @@
 {
     public class Grade
     {
-        public string ClassicGrade { get; set; }
-        public string BolognaGrade { get; set; }
+        public int ClassicGrade { get; set; }
+        public int BolognaGrade { get; set; }
         public string ESTCGrade { get; set; }
         
     }

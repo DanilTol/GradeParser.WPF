@@ -101,39 +101,33 @@ namespace GradeParser.BL.Service
                 subjectCredits = subjectCredits.Where(sub => sub.Type != SubjectType.Offset).ToList();
             }
             #endregion
+            
+
+            //var AllCredits =
+            //    subjectCredits.DistinctBy(sub => sub.Name)
+            //        .Select(sub => new SubjectCreditsOnly {Credit = 0, Name = sub.Name});
+
+            var allCredits = _calculateGrade.CountCreditsForSubject(subjectCredits);
+
+            //studentSource.ForEach(student => student.Subjects.ForEach(stdSubject =>
+            //{
+            //    // Get credit for subject for a certain year & term
+            //    var termYearSubCredit = subjectCredits.FirstOrDefault(
+            //        creSubject =>
+            //            creSubject.Name == stdSubject.Name && creSubject.Term == stdSubject.Term &&
+            //            creSubject.Years == stdSubject.Years);
+            //    var allCreditForSubject = allCredits.FirstOrDefault(allcre => allcre.Name == stdSubject.Name).Credit;
+            //}));
+
+            var studentOut =
+                studentSource.Select(student => _calculateGrade.AverageStudentGrade(student, subjectCredits, allCredits));
 
 
-
-
-
-
-
-
-            var AllCredits =
-                subjectCredits.DistinctBy(sub => sub.Name)
-                    .Select(sub => new SubjectCreditsOnly {Credit = sub.Credit, Name = sub.Name});
-
-
-
-            return studentSource;
+            return studentOut.ToList();
         }
 
 
     }
 
-    public static class Helper
-    {
-
-        #region helpers
-
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
-            (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-        {
-            HashSet<TKey> seenKeys = new HashSet<TKey>();
-
-            return source.Where(element => seenKeys.Add(keySelector(element)));
-        }
-
-        #endregion
-    }
+   
 }
