@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GradeParser.BL.Data.Model;
+using GradeParser.BL.Data.Model.Subjects;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace GradeParser.BL.ExcelFunc
@@ -85,7 +86,7 @@ namespace GradeParser.BL.ExcelFunc
 
             var subjectList = new List<SubjectCredit>();
 
-            foreach (Excel.Range row in usedRange.Rows.Offset[5, 0])
+            foreach (Excel.Range row in usedRange.Rows)
             {
                 if (row.Cells[1, 2].Value2 != null)
                 {
