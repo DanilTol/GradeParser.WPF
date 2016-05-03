@@ -20,25 +20,23 @@ namespace GradeParser.BL.BL
 
         public IEnumerable<SubjectCreditsOnly> CountCreditsForSubject(IEnumerable<SubjectCredit> subjectCredits)
         {
-            //var allCredits =
-            //    subjectCredits.DistinctBy(sub => sub.Name)
-            //        .Select(sub => new SubjectCreditsOnly { Credit = 0, Name = sub.Name });
-
-
+            //Get distinct subjects
             var allCredits =
                 subjectCredits.GroupBy(p => p.Name)
                     .Select(g => g.First())
                     .Select(subject => new SubjectCreditsOnly { Name = subject.Name, Credit = 0 });
-
+            
+            //TODO:Find more elegant solution
             foreach (var subCre in subjectCredits)
             {
-                allCredits.ToList().ForEach(allCre =>
+                allCredits = allCredits.Select(allCre =>
                 {
-                    //TODO: Sum all credits
                     if (allCre.Name == subCre.Name)
                     {
                         allCre.Credit += subCre.Credit;
                     }
+
+                    return allCre;
                 });
             }
 
