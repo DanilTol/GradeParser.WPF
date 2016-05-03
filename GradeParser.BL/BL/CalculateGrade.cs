@@ -9,50 +9,66 @@ namespace GradeParser.BL.BL
 {
     internal class CalculateGrade
     {
-        public List<BaseSubject> RemoveUnneedSubjectTypes(List<BaseSubject> subjects, SubjectType subjectType)
+        public IEnumerable<BaseSubject> RemoveUnneedSubjectTypes(List<BaseSubject> subjects, SubjectType subjectType)
         {
-            return subjects.Where(sub => sub.Type != subjectType).ToList();
+            return subjects.Where(sub => sub.Type != subjectType);
         }
 
-        public List<BaseSubject> RemoveUnnedSubject(List<BaseSubject> subjects, string subjectName)
+        public IEnumerable<BaseSubject> RemoveUnnedSubject(List<BaseSubject> subjects, string subjectName)
         {
             return subjects.Where(sub => !sub.Name.Contains(subjectName)).ToList();
         }
 
 #region Temp methods
-        public List<SubjectCredit> RemoveUnneedSubjectTypes(List<SubjectCredit> subjects, SubjectType subjectType)
+        public IEnumerable<SubjectCredit> RemoveUnneedSubjectTypes(List<SubjectCredit> subjects, SubjectType subjectType)
         {
-            return subjects.Where(sub => sub.Type != subjectType).ToList();
+            return subjects.Where(sub => sub.Type != subjectType);
         }
 
-        public List<Subject> RemoveUnneedSubjectTypes(List<Subject> subjects, SubjectType subjectType)
+        public IEnumerable<Subject> RemoveUnneedSubjectTypes(List<Subject> subjects, SubjectType subjectType)
         {
-            return subjects.Where(sub => sub.Type != subjectType).ToList();
+            return subjects.Where(sub => sub.Type != subjectType);
         }
 
         #endregion
 
-        public IEnumerable<SubjectCreditsOnly> CountCreditsForSubject(IEnumerable<SubjectCredit> subjectCredits)
+        public IEnumerable<SubjectCreditsOnly> CountCreditsForSubject(List<SubjectCredit> subjectCredits)
         {
             //Get distinct subjects
             var allCredits =
                 subjectCredits.GroupBy(p => p.Name)
                     .Select(g => g.First())
-                    .Select(subject => new SubjectCreditsOnly { Name = subject.Name, Credit = 0 });
+                    .Select(subject => new SubjectCreditsOnly { Name = subject.Name, Credit = 0 }).ToList();
             
-            //TODO:Find more elegant solution
-            foreach (var subCre in subjectCredits)
+            subjectCredits.ForEach(subCre =>
             {
-                allCredits = allCredits.Select(allCre =>
+                allCredits.ForEach(allCre =>
                 {
-                    if (allCre.Name == subCre.Name)
+                    if(allCre.Name == subCre.Name)
                     {
                         allCre.Credit += subCre.Credit;
                     }
-
-                    return allCre;
                 });
-            }
+            });
+            
+            // Remove all custom curses because they was count like one curse but it was different
+            allCredits.Remove(allCredits.FirstOrDefault(allCre => allCre.Name == "Курс на вибір"));
+
+            // add custom curses with a unique name
+            allCredits.AddRange(subjectCredits.Where(subCre => subCre.Name == "Курс на вибір").Select(curses => new SubjectCreditsOnly {Name = curses.Name + "_" + curses.Term + "_" + curses.Years, Credit = curses.Credit}));
+
+            //foreach (var subCre in subjectCredits)
+            //{
+            //    allCredits = allCredits.Select(allCre =>
+            //    {
+            //        if (allCre.Name == subCre.Name)
+            //        {
+            //            allCre.Credit += subCre.Credit;
+            //        }
+
+            //        return allCre;
+            //    }).ToList();
+            //}
 
             return allCredits;
         }
