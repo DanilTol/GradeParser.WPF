@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GradeParser.BL.Data.Model;
+using GradeParser.BL.Data.Model.Subjects;
 using Microsoft.Office.Interop.Excel;
 
 namespace GradeParser.BL.BL
@@ -17,6 +18,19 @@ namespace GradeParser.BL.BL
         {
             return subjects.Where(sub => !sub.Name.Contains(subjectName)).ToList();
         }
+
+#region Temp methods
+        public List<SubjectCredit> RemoveUnneedSubjectTypes(List<SubjectCredit> subjects, SubjectType subjectType)
+        {
+            return subjects.Where(sub => sub.Type != subjectType).ToList();
+        }
+
+        public List<Subject> RemoveUnneedSubjectTypes(List<Subject> subjects, SubjectType subjectType)
+        {
+            return subjects.Where(sub => sub.Type != subjectType).ToList();
+        }
+
+        #endregion
 
         public IEnumerable<SubjectCreditsOnly> CountCreditsForSubject(IEnumerable<SubjectCredit> subjectCredits)
         {
@@ -76,6 +90,7 @@ namespace GradeParser.BL.BL
             return Convert.ToInt32(Math.Ceiling(curentGrade * creditsTerm / creditsAll));
         }
 
+       
     }
 
     public static class Helper

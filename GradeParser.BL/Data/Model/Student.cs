@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GradeParser.BL.Data.Model.Subjects;
 
 namespace GradeParser.BL.Data.Model
 {

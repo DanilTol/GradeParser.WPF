@@ -1,4 +1,4 @@
-﻿namespace GradeParser.BL.Data.Model
+﻿namespace GradeParser.BL.Data.Model.Subjects
 {
     public class BaseSubject : BaseEntity
     {
