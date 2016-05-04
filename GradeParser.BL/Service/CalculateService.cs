@@ -11,6 +11,8 @@ namespace GradeParser.BL.Service
 {
     public class CalculateService : IService
     {
+        private const string PhCult = "Фізична культура";
+
         private readonly ExcelParse _excelParse;
         private CalculateGrade _calculateGrade;
 
@@ -24,7 +26,14 @@ namespace GradeParser.BL.Service
         {
             var studentSource = studentPaths.AsParallel().Select(path => this._excelParse.ParseStudentExcel(path)).ToList();
             var subjectCredits = this._excelParse.ParseCreditsExcelFile(creditsPath);
-            
+
+            studentSource.ForEach(student =>
+            {
+                student.Subjects = _calculateGrade.RemoveUnnedSubject(student.Subjects, PhCult).ToList();
+            });
+            subjectCredits = _calculateGrade.RemoveUnnedSubject(subjectCredits, PhCult).ToList();
+
+
 
             #region Filter by allowed subjects for calculation(diff/offset/exam)
             if (!calculationSettings.AllowExam)
@@ -73,10 +82,29 @@ namespace GradeParser.BL.Service
             var allCredits = _calculateGrade.CountCreditsForSubject(subjectCredits);
 
             var studentOut =
-                studentSource.Select(student => _calculateGrade.AverageStudentGrade(student, subjectCredits, allCredits));
+                studentSource.Select(student => _calculateGrade.AverageStudentGrade(student, subjectCredits, allCredits)).ToList();
 
 
-            return studentOut.ToList();
+            //TODO: Sum same name subject grade
+            var c = studentOut.Select(student => student.Subjects.GroupBy(x => x.Name)
+                     .Select(g => new
+                     {
+                         Name = g.Key,
+                         Sum = g.Sum(x => x.Grade.BolognaGrade)
+                     }));
+
+            var cc = studentOut.Select(student => student.Subjects.GroupBy(sub => sub.Name)//);
+                    .Select(groupSub => new Subject
+                     {
+                         Name = groupSub.Select(sub => sub.Name).First(),
+                         Grade = new Grade
+                         {
+                             BolognaGrade = groupSub.Sum(x => x.Grade.BolognaGrade)
+                         }
+                     })).ToList();
+
+
+            return studentOut;
         }
 
 

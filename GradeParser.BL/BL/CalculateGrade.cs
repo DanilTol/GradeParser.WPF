@@ -9,6 +9,8 @@ namespace GradeParser.BL.BL
 {
     internal class CalculateGrade
     {
+        private const string CustomCourse = "Курс на вибір";
+
         public IEnumerable<BaseSubject> RemoveUnneedSubjectTypes(List<BaseSubject> subjects, SubjectType subjectType)
         {
             return subjects.Where(sub => sub.Type != subjectType);
@@ -28,6 +30,16 @@ namespace GradeParser.BL.BL
         public IEnumerable<Subject> RemoveUnneedSubjectTypes(List<Subject> subjects, SubjectType subjectType)
         {
             return subjects.Where(sub => sub.Type != subjectType);
+        }
+
+        public IEnumerable<SubjectCredit> RemoveUnnedSubject(List<SubjectCredit> subjects, string subjectName)
+        {
+            return subjects.Where(sub => !sub.Name.Contains(subjectName));
+        }
+
+        public IEnumerable<Subject> RemoveUnnedSubject(List<Subject> subjects, string subjectName)
+        {
+            return subjects.Where(sub => !sub.Name.Contains(subjectName));
         }
 
         #endregion
@@ -52,10 +64,10 @@ namespace GradeParser.BL.BL
             });
             
             // Remove all custom curses because they was count like one curse but it was different
-            allCredits.Remove(allCredits.FirstOrDefault(allCre => allCre.Name == "Курс на вибір"));
+            allCredits.Remove(allCredits.FirstOrDefault(allCre => allCre.Name == CustomCourse));
 
             // add custom curses with a unique name
-            allCredits.AddRange(subjectCredits.Where(subCre => subCre.Name == "Курс на вибір").Select(curses => new SubjectCreditsOnly {Name = curses.Name + "_" + curses.Term + "_" + curses.Years, Credit = curses.Credit}));
+            allCredits.AddRange(subjectCredits.Where(subCre => subCre.Name == CustomCourse).Select(course => new SubjectCreditsOnly {Name = course.Name + "_" + course.Term + "_" + course.Years, Credit = course.Credit}));
 
             //foreach (var subCre in subjectCredits)
             //{
@@ -86,8 +98,14 @@ namespace GradeParser.BL.BL
                         creSubject =>
                             creSubject.Name == stdSubject.Name && creSubject.Term == stdSubject.Term &&
                             creSubject.Years == stdSubject.Years);
-                    var allCreditForSubject =
-                        subjectCreditsOnlies.FirstOrDefault(allcre => allcre.Name == stdSubject.Name).Credit;
+                    double allCreditForSubject = 0;
+
+                    if (stdSubject.Name == CustomCourse)
+                        allCreditForSubject =
+                         subjectCreditsOnlies.FirstOrDefault(allcre => allcre.Name == stdSubject.Name + "_" + stdSubject.Term + "_" + stdSubject.Years).Credit;
+                    else
+                        allCreditForSubject =
+                                subjectCreditsOnlies.FirstOrDefault(allcre => allcre.Name == stdSubject.Name).Credit;
 
                     return new Subject
                     {
@@ -103,7 +121,7 @@ namespace GradeParser.BL.BL
 
         private int GradeForSubjectAllTime(int curentGrade, double creditsTerm, double creditsAll)
         {
-            return Convert.ToInt32(Math.Ceiling(curentGrade * creditsTerm / creditsAll));
+            return creditsAll == 0 ? 0 : Convert.ToInt32(Math.Ceiling(curentGrade * creditsTerm / creditsAll));
         }
 
        
