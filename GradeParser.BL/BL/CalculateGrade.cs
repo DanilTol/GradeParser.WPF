@@ -111,9 +111,9 @@ namespace GradeParser.BL.BL
             };
         }
 
-        private int GradeForSubjectInTermViaCredits(int curentGrade, double creditsTerm, double creditsAll)
+        private double GradeForSubjectInTermViaCredits(double curentGrade, double creditsTerm, double creditsAll)
         {
-            return creditsAll == 0 ? 0 : Convert.ToInt32(Math.Ceiling(curentGrade * creditsTerm / creditsAll));
+            return creditsAll == 0 ? 0 : curentGrade * creditsTerm / creditsAll;
         }
 
         public IEnumerable<Subject> GradeForSubjectAllTime(List<Subject> subjects)
@@ -145,14 +145,23 @@ namespace GradeParser.BL.BL
                             continue;
 
                         currentSubj.Grade.BolognaGrade += subjects.ElementAt(j).Grade.BolognaGrade;
+                        currentSubj.Grade.ClassicGrade += subjects.ElementAt(j).Grade.ClassicGrade;
                         checkedSubjects[j] = true;
                     }
                 }
 
                 subjectsOut.Add(currentSubj);
             }
-            
-            return subjectsOut;
+
+            return subjectsOut.Select(subj =>
+            {
+                subj.Grade.BolognaGrade = Math.Ceiling(subj.Grade.BolognaGrade);
+                subj.Grade.ClassicGrade = Math.Round(subj.Grade.ClassicGrade, MidpointRounding.AwayFromZero);
+
+                return subj;
+            });
+
+            //return subjectsOut;
         }
 
     }
