@@ -21,7 +21,7 @@ namespace GradeParser.BL.BL
             return subjects.Where(sub => !sub.Name.Contains(subjectName)).ToList();
         }
 
-#region Temp methods
+        #region Temp methods
         public IEnumerable<SubjectCredit> RemoveUnneedSubjectTypes(List<SubjectCredit> subjects, SubjectType subjectType)
         {
             return subjects.Where(sub => sub.Type != subjectType);
@@ -69,19 +69,6 @@ namespace GradeParser.BL.BL
             // add custom curses with a unique name
             allCredits.AddRange(subjectCredits.Where(subCre => subCre.Name == CustomCourse).Select(course => new SubjectCreditsOnly {Name = course.Name + "_" + course.Term + "_" + course.Years, Credit = course.Credit}));
 
-            //foreach (var subCre in subjectCredits)
-            //{
-            //    allCredits = allCredits.Select(allCre =>
-            //    {
-            //        if (allCre.Name == subCre.Name)
-            //        {
-            //            allCre.Credit += subCre.Credit;
-            //        }
-
-            //        return allCre;
-            //    }).ToList();
-            //}
-
             return allCredits;
         }
 
@@ -110,21 +97,64 @@ namespace GradeParser.BL.BL
                     return new Subject
                     {
                         Name = stdSubject.Name,
+                        Type = stdSubject.Type,
+                        Term = stdSubject.Term,
+                        Years = stdSubject.Years,
                         Grade = new Grade
                         {
-                            BolognaGrade = GradeForSubjectAllTime(stdSubject.Grade.BolognaGrade, termYearSubCredit.Credit, allCreditForSubject)
+                            // classic grade based on credits
+                            ClassicGrade = GradeForSubjectInTermViaCredits(stdSubject.Grade.ClassicGrade, termYearSubCredit.Credit, allCreditForSubject),
+                            BolognaGrade = GradeForSubjectInTermViaCredits(stdSubject.Grade.BolognaGrade, termYearSubCredit.Credit, allCreditForSubject)
                         }
                     };
                 }).ToList()
             };
         }
 
-        private int GradeForSubjectAllTime(int curentGrade, double creditsTerm, double creditsAll)
+        private int GradeForSubjectInTermViaCredits(int curentGrade, double creditsTerm, double creditsAll)
         {
             return creditsAll == 0 ? 0 : Convert.ToInt32(Math.Ceiling(curentGrade * creditsTerm / creditsAll));
         }
 
-       
+        public IEnumerable<Subject> GradeForSubjectAllTime(List<Subject> subjects)
+        {
+            //TODO: Find more elegant solution
+            bool[] checkedSubjects = new bool[subjects.Count];
+            var subjectsOut = new List<Subject>();
+
+            for (int i = 0; i < subjects.Count; i++)
+            {
+                if (checkedSubjects[i])
+                {
+                    continue;
+                }
+
+                checkedSubjects[i] = true;
+
+                var currentSubj = subjects.ElementAt(i);
+
+                if (currentSubj.Name == CustomCourse)
+                {
+                    currentSubj.Name = currentSubj.Name + "_" + currentSubj.Term + "_" + currentSubj.Years;
+                }
+                else
+                {
+                    for (int j = 0; j < subjects.Count; j++)
+                    {
+                        if (checkedSubjects[j] || currentSubj.Name != subjects.ElementAt(j).Name)
+                            continue;
+
+                        currentSubj.Grade.BolognaGrade += subjects.ElementAt(j).Grade.BolognaGrade;
+                        checkedSubjects[j] = true;
+                    }
+                }
+
+                subjectsOut.Add(currentSubj);
+            }
+            
+            return subjectsOut;
+        }
+
     }
 
     public static class Helper

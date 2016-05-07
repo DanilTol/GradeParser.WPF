@@ -24,16 +24,19 @@ namespace GradeParser.BL.Service
 
         public List<Student> ParseInputExcels(string[] studentPaths, string creditsPath, CalculationSettings calculationSettings)
         {
+            // Get source data of students
             var studentSource = studentPaths.AsParallel().Select(path => this._excelParse.ParseStudentExcel(path)).ToList();
+            // Get source data for subject for every term
             var subjectCredits = this._excelParse.ParseCreditsExcelFile(creditsPath);
 
+            #region Remove unneed subjects
             studentSource.ForEach(student =>
             {
                 student.Subjects = _calculateGrade.RemoveUnnedSubject(student.Subjects, PhCult).ToList();
             });
             subjectCredits = _calculateGrade.RemoveUnnedSubject(subjectCredits, PhCult).ToList();
 
-
+            #endregion
 
             #region Filter by allowed subjects for calculation(diff/offset/exam)
             if (!calculationSettings.AllowExam)
@@ -73,42 +76,29 @@ namespace GradeParser.BL.Service
             {
                 studentSource.ForEach(student =>
                 {
-                    student.Subjects = _calculateGrade.RemoveUnneedSubjectTypes(student.Subjects, SubjectType.DiffOffset).ToList();
+                    student.Subjects = _calculateGrade.RemoveUnneedSubjectTypes(student.Subjects, SubjectType.Offset).ToList();
                 });
-                subjectCredits = _calculateGrade.RemoveUnneedSubjectTypes(subjectCredits, SubjectType.DiffOffset).ToList();
+                subjectCredits = _calculateGrade.RemoveUnneedSubjectTypes(subjectCredits, SubjectType.Offset).ToList();
             }
             #endregion
-            
+
+            // Get value of credits for each subject
             var allCredits = _calculateGrade.CountCreditsForSubject(subjectCredits);
 
+            // Calc proportional mark for subject in every term
             var studentOut =
                 studentSource.Select(student => _calculateGrade.AverageStudentGrade(student, subjectCredits, allCredits)).ToList();
 
+            return studentOut.Select(student =>
+            {
+                student.Subjects = _calculateGrade.GradeForSubjectAllTime(student.Subjects).ToList();
 
-            //TODO: Sum same name subject grade
-            var c = studentOut.Select(student => student.Subjects.GroupBy(x => x.Name)
-                     .Select(g => new
-                     {
-                         Name = g.Key,
-                         Sum = g.Sum(x => x.Grade.BolognaGrade)
-                     }));
-
-            var cc = studentOut.Select(student => student.Subjects.GroupBy(sub => sub.Name)//);
-                    .Select(groupSub => new Subject
-                     {
-                         Name = groupSub.Select(sub => sub.Name).First(),
-                         Grade = new Grade
-                         {
-                             BolognaGrade = groupSub.Sum(x => x.Grade.BolognaGrade)
-                         }
-                     })).ToList();
-
-
-            return studentOut;
+                return student;
+            }).ToList();
         }
 
 
     }
 
-   
+
 }
