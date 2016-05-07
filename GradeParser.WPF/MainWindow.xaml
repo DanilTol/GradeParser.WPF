@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GradeParser.WPF"
         mc:Ignorable="d"
-        Title="Average grade" Height="233" Width="548">
+        Title="Average grade" Height="213.5" Width="446" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
-        <DockPanel>
+        <!--<DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
                     <MenuItem Header="Open">
@@ -31,30 +31,28 @@
                 </MenuItem>
             </Menu>
             <TextBox AcceptsReturn="True" Height="209" VerticalAlignment="Top" />
-        </DockPanel>
+        </DockPanel>-->
+
         <Grid Margin="0,20,0,0">
 
-            <GroupBox x:Name="ReportLoadGroupBox" Header="ReportLoad" Margin="440,10,12,0" Height="61" VerticalAlignment="Top">
+            <GroupBox x:Name="AllowGroupBox" Header="Учитывать" Margin="0,10,15,0" Height="85" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right">
                 <Grid Margin="0,0,0,0">
-                    <CheckBox x:Name="StudentCheckBox" Content="Student" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Margin="0,2,-45,0"/>
-                    <CheckBox x:Name="CreditsCheckBox" Content="Credits" Margin="0,22,-45,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123"/>
+                    <CheckBox x:Name="ExamCheckBox" Content="Экзамены" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" Margin="0,5,-45,0" IsChecked="True"/>
+                    <CheckBox x:Name="DiffOffsetCheckBox" Content="Диф. зачеты" Margin="0,25,-45,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" IsChecked="True"/>
+                    <CheckBox x:Name="OffsetCheckBox" Content="Зачеты" Margin="0,45,-45,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="123" IsChecked="False"/>
                 </Grid>
             </GroupBox>
 
-            <Button x:Name="CalculateButton" Content="Calculate" Margin="440,96,0,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Click="CalculateButton_Click"/>
-            <Grid HorizontalAlignment="Left" Margin="10,10,0,0" Width="414" Height="127" VerticalAlignment="Top">
-                <Label x:Name="CurrentStudentlabel" Content="CurrentStudent" Margin="161,0,162,103"/>
-                <Label x:Name="StudentNamelabel" Content="Name" Height="26" VerticalAlignment="Top" Margin="10,26,356,0"/>
-                <Label x:Name="Grouplabel" Content="Group" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="AvgClassiclabel" Content="Average Classic" Height="26" VerticalAlignment="Top" Margin="10,83,312,0"/>
-                <Label x:Name="AvgBolognalabel" Content="Bologna" Height="28" VerticalAlignment="Top" Margin="238,83,123,0"/>
-                <TextBlock x:Name="StudentNameTextBlock" Text="Name" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="63,31,10,0" TextAlignment="Center" FontSize="15"/>
-                <TextBlock x:Name="GroupTextBlock" Text="Group" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="63,58,20,0"/>
-                <TextBlock x:Name="AvgClassicTextBlock" Text="AvgClass" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Margin="125,89,233,0" TextAlignment="Center" FontSize="12"/>
-                <TextBlock x:Name="AvgBolognaTextBlock" Text="AvgBologna" Height="32" TextWrapping="Wrap" VerticalAlignment="Top" Margin="309,84,29,0" TextAlignment="Center" FontSize="16" Foreground="LawnGreen"/>
-            </Grid>
-            <ProgressBar Name="pbStatus" Height="23" VerticalAlignment="Bottom" Margin="10,0,0,10" Value="60" RenderTransformOrigin="0.48,0.367" HorizontalAlignment="Left" Width="516"/>
-            <TextBlock Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0}%}" VerticalAlignment="Bottom" Margin="257,0,0,14" HorizontalAlignment="Left" Width="21" />
+            <Button x:Name="CalculateButton" Content="Calculate" Margin="0,0,15,15" Height="40" VerticalAlignment="Bottom" Click="CalculateButton_Click" HorizontalAlignment="Right" Width="100"/>
+            <TextBox x:Name="StudentReportPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,20,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="200"/>
+            <TextBox x:Name="CreditsPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,65,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="200"/>
+            <TextBox x:Name="SaveToPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,110,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="200"/>
+            <Button x:Name="StudentReportPathButton" Content="Browse" HorizontalAlignment="Left" Margin="220,20,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
+            <Button x:Name="CreditsPathButton" Content="Browse" HorizontalAlignment="Left" Margin="220,65,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
+            <Button x:Name="SaveToPathButton" Content="Browse" HorizontalAlignment="Left" Margin="220,110,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
+            <Label x:Name="SaveToPathlabel" Content="Path to save results" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Height="23" Width="120"/>
+            <Label x:Name="CreditsPathlabel" Content="Path to credits" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Height="23" Width="100"/>
+            <Label x:Name="StudentReportPAthlabel" Content="Path to student reports" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Height="23" Width="140"/>
         </Grid>
 
     </Grid>

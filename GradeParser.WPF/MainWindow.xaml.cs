@@ -61,7 +61,7 @@ namespace GradeParser.WPF
         {
             studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
             creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
-            var std = this._calculateService.ParseInputExcels(studentPath, creditPath, new CalculationSettings { AllowDiffOffset = true, AllowExam = true, AllowOffset = true });
+            var std = this._calculateService.ParseInputExcels(studentPath, creditPath, new CalculationSettings { AllowDiffOffset = true, AllowExam = true, AllowOffset = false });
         }
     }
 }
