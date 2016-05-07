@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GradeParser.WPF"
         mc:Ignorable="d"
-        Title="Average grade" Height="213.5" Width="446" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Average grade" Height="213.5" Width="495.5" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <!--<DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -44,12 +44,12 @@
             </GroupBox>
 
             <Button x:Name="CalculateButton" Content="Calculate" Margin="0,0,15,15" Height="40" VerticalAlignment="Bottom" Click="CalculateButton_Click" HorizontalAlignment="Right" Width="100"/>
-            <TextBox x:Name="StudentReportPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,20,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="200"/>
-            <TextBox x:Name="CreditsPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,65,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="200"/>
-            <TextBox x:Name="SaveToPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,110,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="200"/>
-            <Button x:Name="StudentReportPathButton" Content="Browse" HorizontalAlignment="Left" Margin="220,20,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
-            <Button x:Name="CreditsPathButton" Content="Browse" HorizontalAlignment="Left" Margin="220,65,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
-            <Button x:Name="SaveToPathButton" Content="Browse" HorizontalAlignment="Left" Margin="220,110,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
+            <TextBox x:Name="StudentReportPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,20,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="260"/>
+            <TextBox x:Name="CreditsPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,65,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="260"/>
+            <TextBox x:Name="SaveToPathtextBox" HorizontalAlignment="Left" Height="25" Margin="10,110,0,0" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Top" Width="260"/>
+            <Button x:Name="StudentReportPathButton" Content="Browse" HorizontalAlignment="Left" Margin="278,20,0,0" VerticalAlignment="Top" Width="75" Height="25" Click="OpenButton_Click"/>
+            <Button x:Name="CreditsPathButton" Content="Browse" HorizontalAlignment="Left" Margin="278,65,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
+            <Button x:Name="SaveToPathButton" Content="Browse" HorizontalAlignment="Left" Margin="278,110,0,0" VerticalAlignment="Top" Width="75" Height="25"/>
             <Label x:Name="SaveToPathlabel" Content="Path to save results" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Height="23" Width="120"/>
             <Label x:Name="CreditsPathlabel" Content="Path to credits" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Height="23" Width="100"/>
             <Label x:Name="StudentReportPAthlabel" Content="Path to student reports" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Height="23" Width="140"/>

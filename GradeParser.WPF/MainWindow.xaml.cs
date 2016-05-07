@@ -1,8 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using GradeParser.BL.Data.Model;
 using GradeParser.BL.Service;
 using GradeParser.WPF.ViewModel;
+using Microsoft.Win32;
 
 namespace GradeParser.WPF
 {
@@ -11,15 +14,11 @@ namespace GradeParser.WPF
     /// </summary>
     public partial class MainWindow
     {
-        #region UI variables
-        private bool CalcOffset;
-        private ReportLoad ReportLoad;
-        #endregion
-
         #region Common variables
         private CalculateService _calculateService;
-        private string[] studentPath;
-        private string creditPath;
+        private string[] _studentPath;
+        private string _creditPath;
+        private string _savePath;
         #endregion
 
 
@@ -34,34 +33,69 @@ namespace GradeParser.WPF
         /// </summary>
         private void InitCommonVariables()
         {
-            this.ReportLoad = new ReportLoad();
             this._calculateService = new CalculateService();
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            //Finding who send event for marking right condition(input file)
-            var mi = sender as MenuItem;
+            var buttonName = (sender as Button).Name;
 
-            //TODO: open file dialog
-
-            if (mi.Header as string == "Student")
+            if (buttonName == StudentReportPathButton.Name)
             {
-                studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls", @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
-                ReportLoad.Student = true;
+                
             }
             else
             {
-                creditPath = @"C:\Users\Danil\Desktop\Credits.xlsx";
-                ReportLoad.Credits = true;
+                if (buttonName == CreditsPathButton.Name)
+                {
+                    
+                }
+                else
+                {
+                    
+                }
             }
+
+
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Excel (*.xls;*.xlsx)|*.xls;*.xlsx";
+            fileDialog.Multiselect = true;
+            fileDialog.Title = "Choose Excel files";
+            
+            var dr = fileDialog.ShowDialog();
+
+            if (dr.HasValue && dr.Value)
+            {
+                _studentPath = fileDialog.FileNames;
+                StudentReportPathtextBox.Text = fileDialog.FileNames.Aggregate((a, b) => a + "\n " + b);
+            }
+
+            
         }
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-            studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
-            creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
-            var std = this._calculateService.ParseInputExcels(studentPath, creditPath, new CalculationSettings { AllowDiffOffset = true, AllowExam = true, AllowOffset = false });
+            //_studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
+            _creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
+            _savePath = @"C:\Users\Danil\Desktop\Grade\Test\";
+
+            if (string.IsNullOrEmpty(_creditPath) || _studentPath == null || _studentPath.Length < 1 ||
+                string.IsNullOrEmpty(_savePath))
+            {
+                MessageBox.Show(
+                    "Please choose files with credits, student reports and directory where to save result. Then continue.",
+                    "Choose path", MessageBoxButton.OK);
+                return;
+            }
+
+            var calculationSettings = new CalculationSettings
+            {
+                AllowDiffOffset = DiffOffsetCheckBox.IsChecked.Value,
+                AllowExam = ExamCheckBox.IsChecked.Value,
+                AllowOffset = OffsetCheckBox.IsChecked.Value
+            };
+
+            var std = this._calculateService.ParseInputExcels(_studentPath, _creditPath, calculationSettings);
         }
     }
 }

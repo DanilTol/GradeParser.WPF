@@ -144,12 +144,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Grades_logo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="A-logo-220x200.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="A.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
