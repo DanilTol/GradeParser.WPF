@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using GradeParser.BL.Data.Model;
 using GradeParser.BL.Data.Model.Subjects;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -117,9 +119,88 @@ namespace GradeParser.BL.ExcelFunc
             return subjectList;
         }
 
-        public bool SaveStudentExcel(Student student)
+        public bool SaveStudentExcel(Student student, string savePath)
         {
+            var xlApp = new Excel.Application();
 
+            object misValue = System.Reflection.Missing.Value;
+
+            var xlWorkBook = xlApp.Workbooks.Add(misValue);
+            var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.Item[1];
+            Excel.Range chartRange;
+
+            //add data
+            // Set name row
+            xlWorkSheet.Range["A1", "D1"].Merge(false);
+            
+            chartRange = xlWorkSheet.Range["A1", "D1"];
+            chartRange.FormulaR1C1 = student.Name;
+            chartRange.HorizontalAlignment = 3;
+            chartRange.VerticalAlignment = 3;
+            chartRange.Font.Size = 14;
+            chartRange.Font.Bold = true;
+
+            //Set group row
+            xlWorkSheet.Range["A2", "D2"].Merge(false);
+            chartRange = xlWorkSheet.Range["A2", "D2"];
+            chartRange.FormulaR1C1 = student.StudyGroup;
+            chartRange.HorizontalAlignment = 3;
+            chartRange.VerticalAlignment = 3;
+            chartRange.Font.Size = 14;
+            chartRange.Font.Bold = true;
+
+            chartRange = xlWorkSheet.Range["B3"];
+            chartRange.FormulaR1C1 = "ср. Бал";
+            chartRange.Font.Size = 12;
+            chartRange.Font.Bold = true;
+
+            chartRange = xlWorkSheet.Range["C3","D3"];
+            chartRange.Font.Size = 16;
+            chartRange.Font.Bold = true;
+            chartRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+
+            xlWorkSheet.Cells[3, 3] = Math.Round(student.AvgClassicAllYears, 2);
+            xlWorkSheet.Cells[3, 4] = Math.Round(student.AvgBologneAllYears, MidpointRounding.AwayFromZero);
+
+            chartRange = xlWorkSheet.Range["A4", "D4"];
+            chartRange.Font.Size = 12;
+            chartRange.Font.Bold = true;
+            chartRange.HorizontalAlignment = 3;
+            chartRange.VerticalAlignment = 3;
+            chartRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGoldenrodYellow);
+
+            xlWorkSheet.Cells[4, 1] = "№";
+            xlWorkSheet.Cells[4, 2] = "Дисципліна";
+            xlWorkSheet.Cells[4, 3] = "Оцінка";
+            xlWorkSheet.Cells[4, 4] = "Бал";
+
+            for (int i = 0; i < student.Subjects.Count; i++)
+            {
+                xlWorkSheet.Cells[i + 5, 1] = i + 1;
+                xlWorkSheet.Cells[i + 5, 2] = student.Subjects.ElementAt(i).Name;
+                xlWorkSheet.Cells[i + 5, 3] = student.Subjects.ElementAt(i).Grade.ClassicGrade;
+                xlWorkSheet.Cells[i + 5, 4] = student.Subjects.ElementAt(i).Grade.BolognaGrade;
+            }
+
+            chartRange = xlWorkSheet.UsedRange;
+            chartRange.Rows.AutoFit();
+            chartRange.Columns.AutoFit();
+
+            savePath += "\\" + student.StudyGroup;
+            if (!Directory.Exists(savePath))
+            {
+                Directory.CreateDirectory(savePath);
+            }
+            
+            xlWorkBook.SaveAs(savePath + "\\"+ student.Name + ".xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            
+            xlWorkBook.Close(true, null, null);
+            xlApp.Quit();
+
+            releaseObject(xlWorkSheet);
+            releaseObject(xlWorkBook);
+            releaseObject(xlApp);
+            
             return true;
         }
         

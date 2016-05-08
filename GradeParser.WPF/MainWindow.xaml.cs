@@ -60,7 +60,7 @@ namespace GradeParser.WPF
 
             if (calculationSettings.AllowDiffOffset || calculationSettings.AllowExam || calculationSettings.AllowOffset)
             {
-                var std = this._calculateService.ParseInputExcels(_studentPath, _creditPath, calculationSettings);
+                var std = this._calculateService.ParseInputExcels(_studentPath, _creditPath, _savePath, calculationSettings);
             }
         }
 

@@ -21,7 +21,7 @@ namespace GradeParser.BL.Service
             this._excelParse = new ExcelParse();
         }
 
-        public List<Student> ParseInputExcels(string[] studentPaths, string creditsPath, CalculationSettings calculationSettings)
+        public List<Student> ParseInputExcels(string[] studentPaths, string creditsPath, string savePath, CalculationSettings calculationSettings)
         {
             // Get source data of students
             var studentSource = studentPaths.AsParallel().Select(path => this._excelParse.ParseStudentExcel(path)).ToList();
@@ -88,17 +88,22 @@ namespace GradeParser.BL.Service
             var studentOut =
                 studentSource.Select(student => _calculateGrade.AverageStudentGrade(student, subjectCredits, allCredits)).ToList();
 
-            return studentOut.Select(student =>
+            studentOut = studentOut.Select(student =>
             {
                 student.Subjects = _calculateGrade.GradeForSubjectAllTime(student.Subjects).ToList();
                 student.AvgBologneAllYears = student.Subjects.Select(subj => subj.Grade.BolognaGrade).Sum() /
                                            student.Subjects.Count;
-                student.AvgForSpeciality = student.Subjects.Select(subj => subj.Grade.ClassicGrade).Sum()/
+                student.AvgClassicAllYears = student.Subjects.Select(subj => subj.Grade.ClassicGrade).Sum()/
                                            student.Subjects.Count;
 
 
                 return student;
             }).ToList();
+
+            var saveResults = studentOut.AsParallel().Select(student => _excelParse.SaveStudentExcel(student, savePath));
+            var answer = saveResults.Aggregate(true, (a, b) => a && b);
+            
+            return studentOut;
         }
 
 
