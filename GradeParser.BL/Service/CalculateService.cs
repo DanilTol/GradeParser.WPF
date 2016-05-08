@@ -92,6 +92,11 @@ namespace GradeParser.BL.Service
             return studentOut.Select(student =>
             {
                 student.Subjects = _calculateGrade.GradeForSubjectAllTime(student.Subjects).ToList();
+                student.AvgBologneAllYears = student.Subjects.Select(subj => subj.Grade.BolognaGrade).Sum() /
+                                           student.Subjects.Count;
+                student.AvgForSpeciality = student.Subjects.Select(subj => subj.Grade.ClassicGrade).Sum()/
+                                           student.Subjects.Count;
+
 
                 return student;
             }).ToList();

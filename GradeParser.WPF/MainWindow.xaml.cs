@@ -1,11 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using GradeParser.BL.Data.Model;
 using GradeParser.BL.Service;
 using GradeParser.WPF.ViewModel;
-using Microsoft.Win32;
+using Button = System.Windows.Controls.Button;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace GradeParser.WPF
 {
@@ -36,48 +39,11 @@ namespace GradeParser.WPF
             this._calculateService = new CalculateService();
         }
 
-        private void OpenButton_Click(object sender, RoutedEventArgs e)
-        {
-            var buttonName = (sender as Button).Name;
-
-            if (buttonName == StudentReportPathButton.Name)
-            {
-                
-            }
-            else
-            {
-                if (buttonName == CreditsPathButton.Name)
-                {
-                    
-                }
-                else
-                {
-                    
-                }
-            }
-
-
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Excel (*.xls;*.xlsx)|*.xls;*.xlsx";
-            fileDialog.Multiselect = true;
-            fileDialog.Title = "Choose Excel files";
-            
-            var dr = fileDialog.ShowDialog();
-
-            if (dr.HasValue && dr.Value)
-            {
-                _studentPath = fileDialog.FileNames;
-                StudentReportPathtextBox.Text = fileDialog.FileNames.Aggregate((a, b) => a + "\n " + b);
-            }
-
-            
-        }
-
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
             //_studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
-            _creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
-            _savePath = @"C:\Users\Danil\Desktop\Grade\Test\";
+            //_creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
+            //_savePath = @"C:\Users\Danil\Desktop\Grade\Test\";
 
             if (string.IsNullOrEmpty(_creditPath) || _studentPath == null || _studentPath.Length < 1 ||
                 string.IsNullOrEmpty(_savePath))
@@ -96,6 +62,51 @@ namespace GradeParser.WPF
             };
 
             var std = this._calculateService.ParseInputExcels(_studentPath, _creditPath, calculationSettings);
+        }
+
+        private void SaveToPathButton_Click(object sender, RoutedEventArgs e)
+        {
+            var folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.ShowDialog();
+
+            if (string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
+                return;
+
+            _savePath = folderBrowserDialog.SelectedPath;
+            SaveToPathtextBox.Text = _savePath;
+        }
+
+        private void CreditsPathButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new OpenFileDialog
+            {
+                Filter = "Excel (*.xls;*.xlsx)|*.xls;*.xlsx",
+                Title = "Choose Excel files"
+            };
+            fileDialog.ShowDialog();
+
+            if(string.IsNullOrWhiteSpace(fileDialog.FileName))
+                return;
+
+            _creditPath = fileDialog.FileName;
+            CreditsPathtextBox.Text = _creditPath;
+        }
+
+        private void StudentReportPathButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new OpenFileDialog
+            {
+                Filter = "Excel (*.xls;*.xlsx)|*.xls;*.xlsx",
+                Multiselect = true,
+                Title = "Choose Excel files"
+            };
+            fileDialog.ShowDialog();
+
+            if (string.IsNullOrWhiteSpace(fileDialog.FileName))
+                return;
+
+            _studentPath = fileDialog.FileNames;
+            StudentReportPathtextBox.Text = _studentPath.Aggregate((a, b) => a + "\n " + b);
         }
     }
 }

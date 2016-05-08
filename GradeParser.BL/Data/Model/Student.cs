@@ -7,7 +7,7 @@ namespace GradeParser.BL.Data.Model
     {
         public string StudyGroup { get; set; }
         public List<Subject> Subjects { get; set; } 
-        public double AvgForAllYears { get; set; }
+        public double AvgBologneAllYears { get; set; }
         public double AvgForSpeciality { get; set; }
     }
 }
