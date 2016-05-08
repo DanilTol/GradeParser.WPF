@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GradeParser.BL.Data.Model;
 using GradeParser.BL.Data.Model.Subjects;
-using Microsoft.Office.Interop.Excel;
 
 namespace GradeParser.BL.BL
 {

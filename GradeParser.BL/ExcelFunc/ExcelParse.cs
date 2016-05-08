@@ -122,8 +122,7 @@ namespace GradeParser.BL.ExcelFunc
 
             return true;
         }
-
-
+        
         #region Help methods
 
         private SubjectType RecognizeSubjectType(string typeName)

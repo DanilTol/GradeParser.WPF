@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using GradeParser.BL.Data.Model;
 using GradeParser.BL.Service;
-using GradeParser.WPF.ViewModel;
-using Button = System.Windows.Controls.Button;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
@@ -24,7 +20,6 @@ namespace GradeParser.WPF
         private string _savePath;
         #endregion
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -37,14 +32,16 @@ namespace GradeParser.WPF
         private void InitCommonVariables()
         {
             this._calculateService = new CalculateService();
+
+            #region STUB
+            _studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
+            _creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
+            _savePath = @"C:\Users\Danil\Desktop\Grade\Test\";
+            #endregion
         }
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-            //_studentPath = new[] { @"C:\Users\Danil\Desktop\ТОЛМАЧЕВ.xls" };
-            //_creditPath = @"C:\Users\Danil\Desktop\Credits_545а_545б_КСС.xlsx";
-            //_savePath = @"C:\Users\Danil\Desktop\Grade\Test\";
-
             if (string.IsNullOrEmpty(_creditPath) || _studentPath == null || _studentPath.Length < 1 ||
                 string.IsNullOrEmpty(_savePath))
             {
@@ -61,9 +58,13 @@ namespace GradeParser.WPF
                 AllowOffset = OffsetCheckBox.IsChecked.Value
             };
 
-            var std = this._calculateService.ParseInputExcels(_studentPath, _creditPath, calculationSettings);
+            if (calculationSettings.AllowDiffOffset || calculationSettings.AllowExam || calculationSettings.AllowOffset)
+            {
+                var std = this._calculateService.ParseInputExcels(_studentPath, _creditPath, calculationSettings);
+            }
         }
 
+        #region Browse buttons
         private void SaveToPathButton_Click(object sender, RoutedEventArgs e)
         {
             var folderBrowserDialog = new FolderBrowserDialog();
@@ -85,7 +86,7 @@ namespace GradeParser.WPF
             };
             fileDialog.ShowDialog();
 
-            if(string.IsNullOrWhiteSpace(fileDialog.FileName))
+            if (string.IsNullOrWhiteSpace(fileDialog.FileName))
                 return;
 
             _creditPath = fileDialog.FileName;
@@ -108,5 +109,6 @@ namespace GradeParser.WPF
             _studentPath = fileDialog.FileNames;
             StudentReportPathtextBox.Text = _studentPath.Aggregate((a, b) => a + "\n " + b);
         }
+        #endregion
     }
 }
